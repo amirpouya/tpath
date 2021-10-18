@@ -1,0 +1,12 @@
+#nid,label,prop1,prop2,start,end
+1,person,Ann,low,,1,9
+2,person,Bob,low,,1,4
+2,person,Bob,high,,5,9
+3,person,Mia,high,,1,7
+4,bus,Q48,Queen,,3,8
+5,bus,B101,Bronx,,3,7
+6,person,Eve,low,,2,8
+6,person,Eve,low,pos,9,9
+6,person,Eve,low,neg,10,11
+7,person,Zoe,high,,1,8
+

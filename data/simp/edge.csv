@@ -1,0 +1,16 @@
+#eid,src,dst,label,prop1,start,end
+1,1,2,meets,cafe,3,3
+1,1,2,meets,park,5,6
+2,2,3,meets,park,1,2
+3,3,4,rides,,6,7
+5,2,3,cohab,,3,7
+6,1,5,rides,,5,6
+7,6,5,rides,,5,6
+8,6,4,rides,,7,8
+9,7,4,rides,,6,8
+10,6,7,meets,cafe,5,6
+11,3,6,meets,park,4,4
+12,2,1,meets,cafe,3,3
+12,2,1,meets,park,5,6
+13,3,2,meets,park,1,2
+14,3,2,cohab,,3,7
