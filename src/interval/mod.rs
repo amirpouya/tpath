@@ -15,10 +15,10 @@ impl Interval{
     }
 
 
-    pub fn toPoints(&self) -> Vec<usize>{
-        let mut out:Vec<usize> = vec![];
+    pub fn toPoints(&self) -> Vec<i8>{
+        let mut out:Vec<i8> = vec![];
         for i in self.start..self.end+1{
-            out.push(i);
+            out.push(i as i8 );
         }
         return out;
     }
@@ -72,15 +72,30 @@ impl Interval{
         return self.start < other.start && self.end < other.end
     }
 
-    pub fn isPrev(&self,other:&Interval,step:usize) -> bool {
-        return self.start < other.end-step
+    pub fn isPrev(&self,other:&Interval,) -> bool {
+        return self.start < other.end
     }
+    pub fn isNext(&self,other:&Interval,) -> bool {
+        return self.end > other.start
+    }
+
 
     pub fn prev(&self,other:&Interval) -> Option<Interval>
     {
         // Compute the intresction of two interval x and y, where x is prev of y x.prev(y)
         let start = max(self.start, max(other.start-1, 0));
         let end = min(self.end, max(other.end-1,0));
+        if start > 0 && end > 0 && end >= start {
+            return Some(Interval{start,end});
+        }
+        return None;
+    }
+
+    pub fn next(&self,other:&Interval) -> Option<Interval>
+    {
+        // Compute the intresction of two interval x and y, where x is prev of y x.next(y)
+        let start = max(self.start,other.start+1);
+        let end = min(self.end, other.end+1);
         if start > 0 && end > 0 && end >= start {
             return Some(Interval{start,end});
         }

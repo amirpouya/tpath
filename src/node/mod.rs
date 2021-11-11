@@ -47,7 +47,6 @@ impl  Node{
                     prop3,
                     time: Interval {start,end},
                 };
-                println!("{:?}",&n);
                 nodes.push(n)
             }
         }

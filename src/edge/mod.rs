@@ -49,6 +49,7 @@ impl  Edge{
                     prop1,
                     time: Interval {start,end},
                 };
+//                println!("{:?}",&n.eid);
                 edges.push(n)
             }
         }
