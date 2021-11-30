@@ -23,12 +23,16 @@ fn main() {
         }
     }
 
-    let mut config_addr = std::env::args().nth(1).unwrap_or(("/Users/amir/Documents/Projects/rust/tpath/data/example").to_string()).parse::<String>().unwrap();
+    let mut config_addr = std::env::args().nth(1).unwrap_or(("/Users/amir/Documents/Projects/rust/tpath/data/contact").to_string()).parse::<String>().unwrap();
     let qt = std::env::args().nth(2).unwrap_or(("12").to_string()).parse::<String>().unwrap();
-
+    let debug_flag_ = std::env::args().nth(3).unwrap_or(("").to_string()).parse::<String>().unwrap();
+    let mut debug_flag = 3;
+    if debug_flag_ != ""{
+        debug_flag = 10;
+    }
 
     let file_name = config_addr.clone();
-    let debug_flag = 30;
+
 
 
     //read the config
