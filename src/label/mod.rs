@@ -4,12 +4,13 @@ use std::fmt;
 #[derive(Clone,Copy,Debug)]
 pub enum Label {
     meets,
-    rides,
+    visits,
     cohab,
     cafe,
     park,
     person,
     bus,
+    room,
     Ann,
     Bob,
     Mia,
@@ -34,11 +35,10 @@ impl FromStr for Label {
     fn from_str(input: &str) -> Result<Label, Self::Err> {
         match input {
             "meets"  => Ok(Label::meets),
-            "rides"  => Ok(Label::rides),
+            "visits"  => Ok(Label::visits),
             "cohab"  => Ok(Label::cohab),
-
             "person" =>  Ok(Label::person),
-            "bus" =>  Ok(Label::bus),
+            "room" =>  Ok(Label::room),
             "cafe"  => Ok(Label::cafe),
             "park"  => Ok(Label::park),
             "Ann" =>  Ok(Label::Ann),
@@ -60,13 +60,4 @@ impl FromStr for Label {
     }
 }
 
-// impl fmt::Debug for Label {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         match self{
-//             Label::default =>   write!(f, ""),
-//             _ => write!(f, "{:?}", self)
-//
-//
-//         }
-//     }
-// }
+

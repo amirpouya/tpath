@@ -111,4 +111,29 @@ mod tests {
 
     }
 
+
+    #[test]
+    fn test_interval_queality(){
+        assert_eq!((Interval{start: 9,end: 9}== Interval { start: 9, end: 9 }), true);
+        // assert_eq!(Interval{start: 10,end: 12}.next(&Interval { start: 6, end: 9 }), Some(Interval{start:10,end:10}));
+        // assert_eq!(Interval{start: 1,end: 100}.next(&Interval { start: 6, end: 9 }), Some(Interval{start:7,end:10}));
+        //
+        // assert_eq!(Interval{start: 1,end: 100}.next(&Interval { start: 1, end: 9 }), Some(Interval{start:2,end:10}));
+        // assert_eq!(Interval{start: 1,end: 100}.next(&Interval { start: 100, end: 100 }), None);
+        //
+        // assert_eq!(Interval{start: 1,end: 100}.next(&Interval { start: 9, end: 9}), Some(Interval{start:10,end:10}));
+        // assert_eq!(Interval{start: 8,end: 9}.next(&Interval { start: 9, end: 9}), None);
+        // assert_eq!(Interval{start: 7,end: 9}.next(&Interval { start: 9, end: 9}), None);
+        //
+        //
+        // assert_eq!(Interval{start: 7,end: 13}.next(&Interval { start: 6, end: 9 }), Some(Interval{start: 7,end: 10}));
+        //
+        // // assert_eq!(Interval{start: 3,end: 8}.prev(&Interval { start: 9, end: 9 }), Some(Interval{start: 8,end: 8}));
+        // // assert_eq!(Interval{start: 3,end: 8}.prev(&Interval { start: 8, end: 8 }), Some(Interval{start: 7,end: 7}));
+        // // assert_eq!(Interval{start: 3,end: 8}.prev(&Interval { start: 7, end: 7 }), Some(Interval{start: 7,end: 7}));
+        // // assert_eq!(Interval{start: 3,end: 8}.prev(&Interval { start: 8, end: 8 }), Some(Interval{start: 7,end: 7}));
+        //
+
+    }
+
 }

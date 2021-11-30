@@ -34,9 +34,10 @@ impl  Node{
                 let mut elements = good_line[..].split(",");
                 let nid: usize = elements.next().unwrap().parse().ok().expect("malformed src");
                 let label: Label = elements.next().unwrap().parse().ok().expect("malformed src");
-                let prop1: Label = elements.next().unwrap().parse().ok().expect("malformed src");
-                let prop2: Label = elements.next().unwrap().parse().ok().expect("malformed src");
                 let prop3: Label = elements.next().unwrap().parse().ok().expect("malformed src");
+                let prop2: Label = elements.next().unwrap().parse().ok().expect("malformed src");
+                let prop1: Label = elements.next().unwrap().parse().ok().expect("malformed src");
+                let cumsum: usize = elements.next().unwrap().parse().ok().expect("malformed src");
                 let start: usize = elements.next().unwrap().parse().ok().expect("malformed src");
                 let end: usize = elements.next().unwrap().parse().ok().expect("malformed src");
                 let n = Node {
