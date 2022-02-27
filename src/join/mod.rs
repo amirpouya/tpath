@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 use std::collections:: {HashSet};
 use std::hash::Hash;
 use rayon::prelude::*;
@@ -38,20 +37,6 @@ pub fn hash_join_single<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A,
     //         );
     //
 
-=======
-use std::collections::{HashMap, HashSet};
-use std::hash::Hash;
-
-use itertools::Itertools;
-
-// If you know one of the tables is smaller, it is best to make it the second parameter.
-pub fn hash_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A, K, B)>
-    where
-        K: Hash + Eq + Copy,
-        A: Copy,
-        B: Copy,
-{
->>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
     let mut hash_map = HashMap::new();
 
     // hash phase
@@ -72,7 +57,6 @@ pub fn hash_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A, K, B)>
 }
 
 
-<<<<<<< HEAD
 pub fn hash_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A, K, B)>
     where
         K: Hash + Eq + Copy +Send + Sync,
@@ -185,8 +169,6 @@ pub fn hash_join_edge_node(first: & Vec<(i32, Edge)>, second: &Vec<(i32,  Node)>
     temp.iter().for_each(|(val_b, key,val_as)| val_as.iter().for_each(|val_a| result.push((*val_b, *key, *val_a))));
     result
 }
-=======
->>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
 
 fn anti_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<K>
     where
@@ -213,18 +195,10 @@ fn anti_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<K>
     result
 }
 
-<<<<<<< HEAD
 pub fn intersect(a:&Vec<i32>, b:&Vec<i32>) -> Vec<i32>
 {
-    let a: HashSet<i32> =a.clone().into_iter().collect();
-    let b: HashSet<i32> = b.clone().into_iter().collect();
-=======
-pub fn intersect(a:&Vec<usize>, b:&Vec<usize>) -> Vec<usize>
-{
-    let a: HashSet<usize> =a.clone().into_iter().collect();
-    let b: HashSet<usize> = b.clone().into_iter().collect();
->>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
-
+    let a: HashSet<i32> =a.clone().into_par_iter().collect();
+    let b: HashSet<i32> = b.clone().into_par_iter().collect();
     let intersection = a.intersection(&b);
     intersection.map(|e| *e).collect_vec()
 }
