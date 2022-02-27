@@ -6,14 +6,23 @@ use itertools::Itertools;
 use std::str::FromStr;
 use std::fmt;
 use crate::label::Label;
+<<<<<<< HEAD
 use rayon::prelude::*;
+=======
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
 
 
 #[derive(Clone,Copy, Debug)]
 pub struct Edge{
+<<<<<<< HEAD
     pub eid: i32,
     pub src: i32,
     pub dst: i32,
+=======
+    pub eid: usize,
+    pub src: usize,
+    pub dst: usize,
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
     pub label: Label,
     pub prop1: Label,
     pub time: Interval
@@ -35,6 +44,7 @@ impl  Edge{
             let good_line = line.ok().expect("EXCEPTION: read error");
             if !good_line.starts_with('#') && good_line.len() > 0 {
                 let mut elements = good_line[..].split(",");
+<<<<<<< HEAD
                 let nid: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
                 let src: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
                 let dst: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
@@ -42,6 +52,15 @@ impl  Edge{
                 let prop1: Label = elements.next().unwrap().parse().ok().expect("malformed src");
                 let start: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
                 let end: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
+=======
+                let nid: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+                let src: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+                let dst: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+                let label: Label = elements.next().unwrap().parse().ok().expect("malformed src");
+                let prop1: Label = elements.next().unwrap().parse().ok().expect("malformed src");
+                let start: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+                let end: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
                 let n = Edge {
                     eid: nid,
                     src,
@@ -57,6 +76,7 @@ impl  Edge{
         return edges;
     }
 
+<<<<<<< HEAD
 
     pub fn get_from_file_par(filename: &str) -> Vec<Edge>
     {
@@ -91,6 +111,8 @@ impl  Edge{
     }
 
 
+=======
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
     pub fn getByDate(mut inp:Vec<Edge>, date:Interval)-> impl Iterator<Item=Edge > + 'static {
         let out = inp.into_iter().filter(move |m| m.time.overlap(&date))
             .map(move | m| Edge{

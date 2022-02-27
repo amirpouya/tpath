@@ -1,4 +1,5 @@
 use std::cmp::{min, max};
+<<<<<<< HEAD
 use rayon::prelude::*;
 use itertools::Itertools;
 #[derive(Debug)]
@@ -10,12 +11,25 @@ pub struct Interval{
 
 impl Interval{
     pub fn new(start: i32, end:i32) -> Self {
+=======
+
+#[derive(Debug)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct Interval{
+    pub start: usize,
+    pub end: usize
+}
+
+impl Interval{
+    pub fn new(start: usize, end:usize) -> Self {
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
         Self {
             start,end
         }
     }
 
 
+<<<<<<< HEAD
     pub fn toPoints(&self) -> Vec<i32>{
         //let mut out: Vec<i32> = vec![];
         return (self.start  ..self.end  +1).into_iter().collect();
@@ -72,16 +86,59 @@ impl Interval{
             for j in pid {
                out.push((*j, i));
             }
+=======
+    pub fn toPoints(&self) -> Vec<i8>{
+        let mut out:Vec<i8> = vec![];
+        for i in self.start..self.end+1{
+            out.push(i as i8 );
         }
         return out;
     }
 
+    pub fn zip(&self,pid:usize) -> Vec<(usize,usize)>{
+        let mut out:Vec<(usize,usize)> = vec![];
+        for i in self.start..self.end+1{
+            out.push((pid,i));
+        }
+        return out;
+    }
+
+    pub fn zip_op(&self,pid:usize, op:i8) -> Vec<(usize,usize)>{
+        let mut out:Vec<(usize,usize)> = vec![];
+        for i in self.start..self.end+1{
+            if (i as i8 + op ) >= (self.start as i8) && (i as i8 +op) as i8<= (self.end as i8 ) {
+                out.push((pid, (i as i8 +op) as usize));
+            }
+        }
+        return out;
+    }
+
+    pub fn zip_vec(&self,pid:&Vec<usize>) -> Vec<Vec<(usize,usize)>>{
+        let mut out:Vec<Vec<(usize,usize)>> = vec![];
+        for i in self.start..self.end+1 {
+            let mut t: Vec<(usize, usize)> = vec![];
+            for j in pid {
+               t.push((*j, i));
+            }
+            out.push(t);
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
+        }
+        return out;
+    }
+
+<<<<<<< HEAD
 
 
         // pub fn zip_vec_opt(&self,pid:&Vec<i32>,op:&Vec<i32>) -> Vec<Vec<(i32,i32)>>{
     //     let mut out:Vec<Vec<(i32,i32)>> = vec![];
     //     for i in self.start..self.end+1 {
     //         let mut t: Vec<(i32, i32)> = vec![];
+=======
+    // pub fn zip_vec_opt(&self,pid:&Vec<usize>,op:&Vec<i8>) -> Vec<Vec<(usize,usize)>>{
+    //     let mut out:Vec<Vec<(usize,usize)>> = vec![];
+    //     for i in self.start..self.end+1 {
+    //         let mut t: Vec<(usize, usize)> = vec![];
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
     //         for (x,j) in pid.iter().enumerate() {
     //             if i + op[x] >= self.start && i+op[x] <= self.end {
     //                 t.push((*j, i +op[x]));

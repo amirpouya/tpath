@@ -8,7 +8,11 @@ use crate::label::Label;
 
 #[derive(Clone,Copy,Debug)]
 pub struct Node{
+<<<<<<< HEAD
     pub nid: i32,
+=======
+    pub nid: usize,
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
     pub label: Label,
     pub prop1: Label,
     pub prop2: Label,
@@ -32,14 +36,24 @@ impl  Node{
             let good_line = line.ok().expect("EXCEPTION: read error");
             if !good_line.starts_with('#') && good_line.len() > 0 {
                 let mut elements = good_line[..].split(",");
+<<<<<<< HEAD
                 let nid: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
+=======
+                let nid: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
                 let label: Label = elements.next().unwrap().parse().ok().expect("malformed src");
                 let prop3: Label = elements.next().unwrap().parse().ok().expect("malformed src");
                 let prop2: Label = elements.next().unwrap().parse().ok().expect("malformed src");
                 let prop1: Label = elements.next().unwrap().parse().ok().expect("malformed src");
+<<<<<<< HEAD
                 let cumsum: usize = elements.next().unwrap_or("0").parse().ok().expect("malformed src");
                 let start: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
                 let end: i32 = elements.next().unwrap().parse().ok().expect("malformed src");
+=======
+                let cumsum: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+                let start: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+                let end: usize = elements.next().unwrap().parse().ok().expect("malformed src");
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
                 let n = Node {
                     nid,
                     label,
@@ -69,6 +83,7 @@ impl  Node{
         return out ;
     }
 
+<<<<<<< HEAD
 
 
 }
@@ -80,3 +95,6 @@ impl PartialEq for Node {
 }
 
 impl Eq for Node {}
+=======
+}
+>>>>>>> e0107746c275a0ce970d01ee4f1e2df8c1cbedda
