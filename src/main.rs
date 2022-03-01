@@ -25,11 +25,11 @@ fn main() {
     }
     //let num_thred_ = std::env::args().nth(1).unwrap_or((1).to_string()).parse::<i32>().unwrap();
     let num_thred_ = current_num_threads();
-    let mut config_addr = std::env::args().nth(2).unwrap_or(("/Users/amir/Documents/Projects/rust/tpath/data/contact").to_string()).parse::<String>().unwrap();
-    let qt = std::env::args().nth(3).unwrap_or(("12").to_string()).parse::<String>().unwrap();
+    let mut config_addr = std::env::args().nth(1).unwrap_or(("/Users/amir/Documents/Projects/rust/tpath/data/contact").to_string()).parse::<String>().unwrap();
+    let qt = std::env::args().nth(2).unwrap_or(("12").to_string()).parse::<String>().unwrap();
     let qtt:i32 = qt.parse().unwrap();
 
-    let debug_flag_ = std::env::args().nth(4).unwrap_or(("").to_string()).parse::<String>().unwrap();
+    let debug_flag_ = std::env::args().nth(3).unwrap_or(("").to_string()).parse::<String>().unwrap();
 
     //rayon::ThreadPoolBuilder::new().num_threads(num_thred_ as usize).build_global().unwrap();
     let mut debug_flag = 3;
@@ -630,10 +630,11 @@ fn main() {
         //zppp.dedup();
 
         let struct_time = exec_time.elapsed().as_millis();
-        let q12 = zppp.into_iter()
-            .map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).map(move |(xt, yt)| (x, xt)))
+        let q12:Vec<(i32,i32)> = zppp.into_par_iter()
+            //.map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).map(move |(xt, yt)| (x, xt)))
+            .map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_par_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).map(move |(xt, yt)| (x, xt)))
             .flat_map(|x| x)
-            .collect_vec();
+            .collect();
         log(format!("q12[(x,t)]{:?}", &q12), 5, debug_flag);
         //log(format!("st, t, #q11:{:?}, {:?}, {:?}", struct_time, exec_time.elapsed().as_millis(), &q11.len()), 1, debug_flag);
         log(format!("{:?},q12 {:?},{:?},{:?}, {:?}", &num_thred_, data_name,struct_time,exec_time.elapsed().as_millis(), &q12.len()), 1, debug_flag);
@@ -697,10 +698,11 @@ fn main() {
         //zppp.dedup();
 
         let struct_time = exec_time.elapsed().as_millis();
-        let q12 = zppp.into_iter()
-            .map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).map(move |(xt, yt)| (x, xt)))
+        let q12:Vec<(i32,i32)> = zppp.into_par_iter()
+            //.map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).map(move |(xt, yt)| (x, xt)))
+            .map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_par_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).map(move |(xt, yt)| (x, xt)))
             .flat_map(|x| x)
-            .collect_vec();
+            .collect();
         log(format!("q12[(x,t)]{:?}", &q12), 5, debug_flag);
         //log(format!("st, t, #q11:{:?}, {:?}, {:?}", struct_time, exec_time.elapsed().as_millis(), &q11.len()), 1, debug_flag);
         log(format!("{:?},q12-p {:?},{:?},{:?}, {:?}", &num_thred_, data_name,struct_time,exec_time.elapsed().as_millis(), &q12.len()), 1, debug_flag);
