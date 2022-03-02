@@ -23,21 +23,22 @@ fn main() {
             println!("{:?}", input);
         }
     }
-    //let num_thred_ = std::env::args().nth(1).unwrap_or((1).to_string()).parse::<i32>().unwrap();
-    let num_thred_ = current_num_threads();
+    //let mut num_thred_ = current_num_threads();
     let mut config_addr = std::env::args().nth(1).unwrap_or(("/Users/amir/Documents/Projects/rust/tpath/data/contact").to_string()).parse::<String>().unwrap();
     let qt = std::env::args().nth(2).unwrap_or(("12").to_string()).parse::<String>().unwrap();
     let qtt:i32 = qt.parse().unwrap();
 
     let debug_flag_ = std::env::args().nth(3).unwrap_or(("").to_string()).parse::<String>().unwrap();
 
-    //rayon::ThreadPoolBuilder::new().num_threads(num_thred_ as usize).build_global().unwrap();
     let mut debug_flag = 3;
     if debug_flag_ != ""{
         debug_flag = 10;
     }
+    debug_flag = 3;
     let file_name = config_addr.clone();
 
+    let num_thred_ = std::env::args().nth(4).unwrap_or((1).to_string()).parse::<usize>().unwrap();
+    rayon::ThreadPoolBuilder::new().num_threads(num_thred_ as usize).build_global().unwrap();
 
 
     //read the config
