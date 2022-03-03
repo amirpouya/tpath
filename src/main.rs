@@ -17,7 +17,7 @@ use rayon::current_num_threads;
 fn main() {
 
 
-    let query_list = [10,11,12];
+    let query_list = [11,12];
     fn log(input: String, level: usize, debug_flag: usize) {
         if debug_flag >= level {
             println!("{:?}", input);
@@ -517,8 +517,8 @@ fn main() {
 
         let struct_time = exec_time.elapsed().as_millis();
         let q11:Vec<(i32,i32)> = zppp.into_par_iter()
-            //.map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).map(move |(xt, yt)| (x, xt)))
-            .map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_par_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).map(move |(xt, yt)| (x, xt)))
+            .map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).par_bridge().map(move |(xt, yt)| (x, xt)))
+            //.map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).par_bridge().map(move |(xt, yt)| (x, xt)))
 
             .flat_map(|x| x)
             .collect();
@@ -527,7 +527,7 @@ fn main() {
         log(format!("{:?},q11 {:?},{:?},{:?}, {:?}", &num_thred_, data_name,struct_time,exec_time.elapsed().as_millis(), &q11.len()), 1, debug_flag);
     }
 
-    if query_list.contains(&11) {
+    if query_list.contains(&0) {
         //Q11 MATCH (x:Person {risk = 'high'})-// /FWD/:visits/FWD/:Room/BWD/:visits/// BWD/NEXT[0,12]/-({test = 'pos'})
         let exec_time = Instant::now();
         let x: Vec<(i32, Interval)> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::high)).map(|p| (p.nid, p.time.clone())).collect();
@@ -632,8 +632,8 @@ fn main() {
 
         let struct_time = exec_time.elapsed().as_millis();
         let q12:Vec<(i32,i32)> = zppp.into_par_iter()
-            //.map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).map(move |(xt, yt)| (x, xt)))
-            .map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_par_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).map(move |(xt, yt)| (x, xt)))
+            .map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).par_bridge().map(move |(xt, yt)| (x, xt)))
+            //.map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_par_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).map(move |(xt, yt)| (x, xt)))
             .flat_map(|x| x)
             .collect();
         log(format!("q12[(x,t)]{:?}", &q12), 5, debug_flag);
@@ -642,7 +642,7 @@ fn main() {
 
     }
 
-    if query_list.contains(&12) {
+    if query_list.contains(&0) {
 
         //MATCH (x:Person {risk = 'high'})- /(FWD/:meets/FWD/NEXT[0,12]) + (FWD/:visits/FWD/:Room/BWD/:visits/ BWD/NEXT[0,12])/-({test = 'pos'})
 
@@ -700,8 +700,8 @@ fn main() {
 
         let struct_time = exec_time.elapsed().as_millis();
         let q12:Vec<(i32,i32)> = zppp.into_par_iter()
-            //.map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).map(move |(xt, yt)| (x, xt)))
-            .map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_par_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).map(move |(xt, yt)| (x, xt)))
+            .map(|((x, xt, yt))| (xt.toPoints().into_iter().cartesian_product(yt.toPoints()).filter(|(xt, yt)| *yt - *xt <= qt.parse().unwrap())).par_bridge().map(move |(xt, yt)| (x, xt)))
+            //.map(|((x, xt, yt))| (yt.zip_two_points(&xt.toPoints()).into_par_iter().filter(|(xt, yt)| *yt - *xt <= qtt)).map(move |(xt, yt)| (x, xt)))
             .flat_map(|x| x)
             .collect();
         log(format!("q12[(x,t)]{:?}", &q12), 5, debug_flag);
