@@ -17,7 +17,7 @@ use rayon::current_num_threads;
 fn main() {
 
 
-    let query_list = [11,12];
+    let query_list = [1,2,3,4,5,6,7,8,9,10,11,12];
     fn log(input: String, level: usize, debug_flag: usize) {
         if debug_flag >= level {
             println!("{:?}", input);
