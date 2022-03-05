@@ -134,9 +134,10 @@ df_bus_edge['end'] = df_bus_edge['Interval'].map(lambda x: x[1] + 1)
 dff_bus = df_bus_edge[['src', 'dst', 'label', 'prop1', 'start', 'end']]
 
 df_loc = \
-df.join(loc.set_index('loc'), on='loc').dropna().reset_index(level=-1, drop=True).reset_index().drop(["index", "dst"],
-                                                                                                     axis=1)[
-    ['src', 'loc', 'Interval']]
+    df.join(loc.set_index('loc'), on='loc').dropna().reset_index(level=-1, drop=True).reset_index().drop(
+        ["index", "dst"],
+        axis=1)[
+        ['src', 'loc', 'Interval']]
 # df_loc2 = df_loc.rename(columns={'src':'dst','Interval':'Interval2'})
 
 # df_loc3 = df_loc.join(df_loc2.set_index('loc'), on='loc').dropna()
