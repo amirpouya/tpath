@@ -1,5 +1,4 @@
 #[macro_use]
-
 pub mod interval;
 pub mod node;
 pub mod edge;

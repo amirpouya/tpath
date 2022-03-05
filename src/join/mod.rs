@@ -1,21 +1,20 @@
-use std::collections:: {HashSet};
+use std::collections::HashSet;
 use std::hash::Hash;
+
+use hashbrown::HashMap;
+use itertools::Itertools;
 use rayon::prelude::*;
 
-use itertools::Itertools;
 use crate::edge::Edge;
 use crate::node::Node;
-use hashbrown::HashMap;
-
-
 
 // If you know one of the tables is smaller, it is best to make it the second parameter.
 
 pub fn hash_join_single<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A, K, B)>
     where
-        K: Hash + Eq + Copy +Send + Sync,
-        A: Copy +Send + Sync,
-        B: Copy+Send + Sync,
+        K: Hash + Eq + Copy + Send + Sync,
+        A: Copy + Send + Sync,
+        B: Copy + Send + Sync,
 {
     // let  hash_map =
     //     second.par_iter()
@@ -59,11 +58,10 @@ pub fn hash_join_single<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A,
 
 pub fn hash_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A, K, B)>
     where
-        K: Hash + Eq + Copy +Send + Sync,
-        A: Copy +Send + Sync ,
-        B: Copy+Send + Sync ,
+        K: Hash + Eq + Copy + Send + Sync,
+        A: Copy + Send + Sync,
+        B: Copy + Send + Sync,
 {
-
     let hash_map =
         second.par_iter()
             .fold(
@@ -95,14 +93,11 @@ pub fn hash_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<(A, K, B)>
 }
 
 
-
-pub fn hash_join_2<A,B>(first: & Vec<(i32, A)>, second: &Vec<(i32,  B)>) -> Vec<(A, i32, B)>
-
+pub fn hash_join_2<A, B>(first: &Vec<(i32, A)>, second: &Vec<(i32, B)>) -> Vec<(A, i32, B)>
     where
-        A: Copy +Send + Sync ,
-        B: Copy+Send + Sync ,
+        A: Copy + Send + Sync,
+        B: Copy + Send + Sync,
 {
-
     let hash_map =
         second.par_iter()
             .fold(
@@ -122,25 +117,24 @@ pub fn hash_join_2<A,B>(first: & Vec<(i32, A)>, second: &Vec<(i32,  B)>) -> Vec<
                 },
             );
 
-    let mut result:Vec<(A, i32, B)> = vec![];
-    let  temp:Vec<(A, i32, Vec<B>)> = first.par_iter()
+    let mut result: Vec<(A, i32, B)> = vec![];
+    let temp: Vec<(A, i32, Vec<B>)> = first.par_iter()
         //.filter(|&(key, val_b)| hash_map.contains_key(&key))
         .filter_map(|&(key, val_b)|
-                        match hash_map.get(&key) {
-                            Some(x) => Some((val_b, key, hash_map.get(&key).unwrap().clone())),
-                            None => { None },
-                        }).collect();
+            match hash_map.get(&key) {
+                Some(x) => Some((val_b, key, hash_map.get(&key).unwrap().clone())),
+                None => { None }
+            }).collect();
     //.map(|(val_b, key,val_as)|val_as.par_iter().map(|val_a| ((val_b, key, val_a)))).collect();
 
-    temp.iter().for_each(|(val_b, key,val_as)| val_as.iter().for_each(|val_a| result.push((*val_b, *key, *val_a))));
+    temp.iter().for_each(|(val_b, key, val_as)| val_as.iter().for_each(|val_a| result.push((*val_b, *key, *val_a))));
     result
 }
 
 
-pub fn hash_join_edge_node(first: & Vec<(i32, Edge)>, second: &Vec<(i32,  Node)>) -> Vec<(Edge, i32, Node)>
+pub fn hash_join_edge_node(first: &Vec<(i32, Edge)>, second: &Vec<(i32, Node)>) -> Vec<(Edge, i32, Node)>
 
 {
-
     let hash_map =
         second.par_iter()
             .fold(
@@ -160,13 +154,13 @@ pub fn hash_join_edge_node(first: & Vec<(i32, Edge)>, second: &Vec<(i32,  Node)>
                 },
             );
 
-    let  temp:Vec<(Edge, i32, Vec<Node>)> =
+    let temp: Vec<(Edge, i32, Vec<Node>)> =
         first.par_iter().filter(|&(key, val_b)| hash_map.contains_key(&key))
             .map(|&(key, val_b)| (val_b, key, hash_map.get(&key).unwrap().clone())).collect();
-                     // .map(|&(key, val_b)| (hash_map.get(&key).unwrap().par_iter().map(move|&val_a| (val_b, key, val_a)))).flat_map(|x|x).collect();
+    // .map(|&(key, val_b)| (hash_map.get(&key).unwrap().par_iter().map(move|&val_a| (val_b, key, val_a)))).flat_map(|x|x).collect();
 
-    let mut result:Vec<(Edge, i32, Node)> = vec![];
-    temp.iter().for_each(|(val_b, key,val_as)| val_as.iter().for_each(|val_a| result.push((*val_b, *key, *val_a))));
+    let mut result: Vec<(Edge, i32, Node)> = vec![];
+    temp.iter().for_each(|(val_b, key, val_as)| val_as.iter().for_each(|val_a| result.push((*val_b, *key, *val_a))));
     result
 }
 
@@ -187,7 +181,7 @@ fn anti_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<K>
     let mut result = Vec::new();
     // join phase
     for &(key, _) in first {
-        if !hash_map.contains_key(&key){
+        if !hash_map.contains_key(&key) {
             result.push(key);
         }
     }
@@ -195,9 +189,9 @@ fn anti_join<A, B, K>(first: &[(K, A)], second: &[(K, B)]) -> Vec<K>
     result
 }
 
-pub fn intersect(a:&Vec<i32>, b:&Vec<i32>) -> Vec<i32>
+pub fn intersect(a: &Vec<i32>, b: &Vec<i32>) -> Vec<i32>
 {
-    let a: HashSet<i32> =a.clone().into_par_iter().collect();
+    let a: HashSet<i32> = a.clone().into_par_iter().collect();
     let b: HashSet<i32> = b.clone().into_par_iter().collect();
     let intersection = a.intersection(&b);
     intersection.map(|e| *e).collect_vec()

@@ -1,22 +1,24 @@
-use crate::interval::Interval;
 use std::fs::File;
+use std::io::{BufRead, BufReader};
 use std::path::Path;
-use std::io::{BufReader, BufRead};
-use itertools::Itertools;
+
 use itertools::__std_iter::{Filter, Map};
+use itertools::Itertools;
+
+use crate::interval::Interval;
 use crate::label::Label;
 
-#[derive(Clone,Copy,Debug)]
-pub struct Node{
+#[derive(Clone, Copy, Debug)]
+pub struct Node {
     pub nid: i32,
     pub label: Label,
     pub prop1: Label,
     pub prop2: Label,
     pub prop3: Label,
-    pub time: Interval
+    pub time: Interval,
 }
 
-impl  Node{
+impl Node {
     pub fn get_from_file(filename: &str) -> Vec<Node>
     {
         let mut nodes: Vec<Node> = vec![];
@@ -46,7 +48,7 @@ impl  Node{
                     prop1,
                     prop2,
                     prop3,
-                    time: Interval {start,end},
+                    time: Interval { start, end },
                 };
                 nodes.push(n)
             }
@@ -54,19 +56,18 @@ impl  Node{
         return nodes;
     }
 
-    pub fn getByDate(mut inp:Vec<Node>, date:Interval)-> impl Iterator<Item=Node> + 'static {
-
-        let out = inp.into_iter().filter(move | m| m.time.overlap( &date))
-            .map(move | m| Node{
+    pub fn getByDate(mut inp: Vec<Node>, date: Interval) -> impl Iterator<Item=Node> + 'static {
+        let out = inp.into_iter().filter(move |m| m.time.overlap(&date))
+            .map(move |m| Node {
                 nid: m.nid,
                 label: m.label,
                 prop1: m.prop1,
                 prop2: m.prop2,
                 prop3: m.prop3,
-                time: m.time.intersect(&date)
+                time: m.time.intersect(&date),
             });
 
-        return out ;
+        return out;
     }
 }
 
