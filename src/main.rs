@@ -16,7 +16,7 @@ use tpath::label::Label;
 use tpath::node::Node;
 
 fn main() {
-    let query_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    let query_list = [1, 2, 3, 4, 5];
     fn log(input: String, level: usize, debug_flag: usize) {
         if debug_flag >= level {
             println!("{:?}", input);
@@ -62,6 +62,7 @@ fn main() {
         //Q1 MATCH (x: Person) ON contact_tracing
         let exec_time = Instant::now();
         let q1: Vec<&Node> = nodes.par_iter().filter(|p| matches!(p.label,Label::person)).collect();
+        println!("QSSS q1{:?}:",q1.len());
         let struct_time = exec_time.elapsed().as_millis();
         let q1: Vec<(i32, i32)> = q1.par_iter()
             .flat_map(|p| (p.time.start..p.time.end + 1).into_par_iter().map(move |i| (p.nid, i)))
@@ -75,6 +76,7 @@ fn main() {
         //Q2 MATCH (x: Person { risk = 'low '}) ON contact_tracing
         let exec_time = Instant::now();
         let q2: Vec<&Node> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::low)).collect();
+        println!("QSSS q2{:?}:",q2.len());
         let struct_time = exec_time.elapsed().as_millis();
         let q2: Vec<(i32, i32)> = q2.par_iter()
             .flat_map(|p| (p.time.start..p.time.end + 1).into_par_iter().map(move |i| (p.nid, i)))
@@ -83,7 +85,6 @@ fn main() {
         log(format!("q2(x,t){:?}", &q2), 5, debug_flag);
         println!("{:?},q2,{}_{},{:?},{:?},{:?}", &num_thred_, data_name, qt, struct_time, exec_time.elapsed().as_millis(), &q2.len());
     }
-
 
     if query_list.contains(&3) {
         //Q3 MATCH (x: Person { risk = 'low ' AND time = '1'}) ON contact_tracing
@@ -99,6 +100,43 @@ fn main() {
         //log(format!("t,#q3 {:?},{:?}",exec_time.elapsed().as_millis(),&q3.len());
         println!("{:?},q3,{}_{},{:?},{:?},{:?}", &num_thred_, data_name, qt, struct_time, exec_time.elapsed().as_millis(), &q3.len());
     }
+
+    if query_list.contains(&3) {
+        //New Q3
+        //Q3 MATCH (x: Person { risk = 'low ' AND time = '1'}) ON contact_tracing
+        let exec_time = Instant::now();
+        let time_one = Interval{start:1,end:1};
+        let q3: Vec<&Node> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::low) && p.time.overlap(&time_one))
+            .collect();
+        let struct_time = exec_time.elapsed().as_millis();
+        //log(format!("t,#q3 {:?},{:?}",exec_time.elapsed().as_millis(),&q3.len());
+        println!("{:?},q3s,{}_{},{:?},{:?},{:?}", &num_thred_, data_name, qt, struct_time, exec_time.elapsed().as_millis(), &q3.len());
+    }
+
+    if query_list.contains(&4) {
+        //New
+        //Q4 MATCH (x: Person { risk = 'low ' AND time < '10'}) ON contact_tracing
+        let exec_time = Instant::now();
+        let time_one = Interval{start:10,end:10};
+
+        let q4: Vec<Node> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::low))
+            .filter_map(|n| match n.time.leftBefore(&time_one) {
+            Some(t) => Some(Node {
+                nid: n.nid,
+                label: n.label,
+                prop1: n.prop1,
+                prop2: n.prop2,
+                prop3: n.prop3,
+                time: t
+            }),
+            None => None
+        })
+            .collect();
+        let struct_time = exec_time.elapsed().as_millis();
+        //log(format!("t,#q4 {:?},{:?}",exec_time.elapsed().as_millis(),&q4.len());
+        println!("{:?},q4s,{}_{},{:?},{:?},{:?}", &num_thred_, data_name, qt, 0, exec_time.elapsed().as_millis(), &q4.len());
+    }
+
 
     if query_list.contains(&4) {
         //Q4 MATCH (x: Person { risk = 'low ' AND time < '10'}) ON contact_tracing
@@ -158,49 +196,48 @@ fn main() {
 
         //log(format!("st,t,#q5:{:?},{:?},{:?}",struct_time,exec_time.elapsed().as_millis(),&q5.len());
     }
-    // if query_list.contains(&5) {
-    //     /* Q5 MATCH (x: Person { risk = 'low '}) -[z: meets ]->(y: Person { risk = 'high '}) */
-    //     let exec_time = Instant::now();
-    //     let x: Vec<(i32,Node)> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::low)).map(|p| (p.nid,p.clone())).collect();
-    //     let y: Vec<(i32,Node)> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::high)).map(|p| (p.nid,p.clone())).collect();
-    //     let mut zp: Vec<(i32,Edge)> = edges.par_iter().filter(|e| matches!(e.label,Label::meets)).map(|e| (e.src,e.clone())).collect();
-    //
-    //     zp = hash_join_2(&zp,&x).into_par_iter()
-    //         .filter_map(|(e,_,n)| match e.time.overlap(&n.time) {
-    //             true => Some(Edge {
-    //                 eid: e.eid,
-    //                 src: e.src,
-    //                 dst: e.dst,
-    //                 label: e.label,
-    //                 prop1: e.prop1,
-    //                 time: e.time.intersect(&n.time)
-    //             }),
-    //             false => None
-    //         }).map(|e| (e.dst,e)).collect();
-    //     let q5: Vec<Edge> = hash_join_2(&zp,&y).into_par_iter()
-    //         .filter_map(|(e,_,n)| match e.time.overlap(&n.time) {
-    //             true => Some(Edge {
-    //                 eid: e.eid,
-    //                 src: e.src,
-    //                 dst: e.dst,
-    //                 label: e.label,
-    //                 prop1: e.prop1,
-    //                 time: e.time.intersect(&n.time)
-    //             }),
-    //             false => None
-    //         }).collect();
-    //     let struct_time = exec_time.elapsed().as_millis();
-    //
-    //     let q5: Vec<Vec<(i32,i32)>> = q5.par_iter()
-    //         .flat_map(|e| (e.time.zip_vec(&vec![e.src,e.eid,e.dst])))
-    //         //.map(|e|(e.time.zip(e.src),(e.time.zip(e.eid)),(e.time.zip(e.dst))))
-    //         .collect();
-    //     log(format!("q5[(x,t),(z,t),(y,t)]{:?}",&q5),5,debug_flag);
-    //     println!("{:?},q5-p {:?},{:?},{:?},{:?}",&num_thred_,data_name,qt,struct_time,exec_time.elapsed().as_millis(),&q5.len());
-    //
-    //     //log(format!("st,t,#q5:{:?},{:?},{:?}",struct_time,exec_time.elapsed().as_millis(),&q5.len());
-    // }
 
+
+    if query_list.contains(&5) {
+        //New
+        /* Q5 MATCH (x: Person { risk = 'low '}) -[z: meets ]->(y: Person { risk = 'high '}) */
+        let exec_time = Instant::now();
+        let x: Vec<(i32, Node)> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::low)).map(|p| (p.nid, p.clone())).collect();
+        let y: Vec<(i32, Node)> = nodes.par_iter().filter(|p| matches!(p.label,Label::person) && matches!(p.prop2,Label::high)).map(|p| (p.nid, p.clone())).collect();
+        let mut zp: Vec<(i32, Edge)> = edges.par_iter().filter(|e| matches!(e.label,Label::meets)).map(|e| (e.src, e.clone())).collect();
+
+
+        zp = hash_join(&zp, &x).into_par_iter()
+            .filter_map(|(e, _, n)| match e.time.overlap(&n.time) {
+                true => Some(Edge {
+                    eid: e.eid,
+                    src: e.src,
+                    dst: e.dst,
+                    label: e.label,
+                    prop1: e.prop1,
+                    time: e.time.intersect(&n.time),
+                }),
+                false => None
+            }).map(|e| (e.dst, e))
+            .collect();
+        let q5: Vec<Edge> = hash_join(&zp, &y).into_par_iter()
+            .filter_map(|(e, _, n)| match e.time.overlap(&n.time) {
+                true => Some(Edge {
+                    eid: e.eid,
+                    src: e.src,
+                    dst: e.dst,
+                    label: e.label,
+                    prop1: e.prop1,
+                    time: e.time.intersect(&n.time),
+                }),
+                false => None
+            }).collect();
+        let struct_time = exec_time.elapsed().as_millis();
+        log(format!("q5[(x,t),(z,t),(y,t)]{:?}", &q5), 5, debug_flag);
+        println!("{:?},q5s,{}_{},{:?},{:?},{:?}", &num_thred_, data_name, qt, struct_time, exec_time.elapsed().as_millis(), &q5.len());
+
+        //log(format!("st,t,#q5:{:?},{:?},{:?}",struct_time,exec_time.elapsed().as_millis(),&q5.len());
+    }
 
     // Q6 MATCH (x: Person { test = 'pos '}) - / PREV /-(y: Person ) ON contact_tracing
     if query_list.contains(&6) {

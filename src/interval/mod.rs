@@ -82,6 +82,20 @@ impl Interval {
         return self.start < other.start && self.end < other.end;
     }
 
+    pub fn leftBefore(&self, other: &Interval) -> Option<Interval> {
+        if self.start > other.start {
+            return None
+        }
+        if self.end < other.start{
+            return Some(*self)
+        }
+        if self.end > other.start{
+            return Some(Interval{start:self.start, end:other.start})
+        }
+        return None;
+
+    }
+
     pub fn isPrev(&self, other: &Interval) -> bool {
         return self.start < other.end;
     }
