@@ -1,6 +1,6 @@
 # tpath
 TPATH 
-Prototype for ICDE Submission.
+Prototype for TRPQ
 https://arxiv.org/abs/2107.01241
 
 ## How to run? 
